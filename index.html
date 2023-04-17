@@ -10,15 +10,15 @@
 <body style='margin : 0px; overflow: hidden;'>
     <a-scene embedded arjs='debugUIEnabled: false;'>
         <a-assets>
-            <a-asset-item id="model1" src="1111.glb"></a-asset-item>
-            <a-asset-item id="model2" src="1111.glb"></a-asset-item>
+            <a-asset-item id="model1" src="assets/1111.glb"></a-asset-item>
+            <a-asset-item id="model2" src="assets/1111.glb"></a-asset-item>
         </a-assets>
 
-        <a-marker preset="custom" type="pattern" url="marker.patt">
+        <a-marker preset="custom" type="pattern" url="assets/marker.patt">
             <a-entity gltf-model="#model1" position="0 0 0" scale="0.4 0.4 0.4"></a-entity>
         </a-marker>
 
-        <a-marker preset="custom" type="pattern" url="marker2.patt">
+        <a-marker preset="custom" type="pattern" url="assets/marker2.patt">
             <a-entity gltf-model="#model2" position="0 0 0"></a-entity>
         </a-marker>
 
