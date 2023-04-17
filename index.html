@@ -8,76 +8,12 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <!-- AR.js を読み込む -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r122/three.js"></script>
-    <script src="https://cdn.rawgit.com/mrdoob/three.js/r122/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.2/three.js/build/ar.js"></script>
     <title>任意のページタイトル</title>
   </head>
   <body style="margin: 0; overflow: hidden">
-    <script>
-      const clock = new THREE.Clock();
-
-let scene, camera, renderer;
-let arToolkitSource, arToolkitContext;
-let mixer;
-
-init();
-
-function init() {
-  scene = new THREE.Scene();
-
-  camera = new THREE.Camera();
-  scene.add(camera);
-
-  renderer = new THREE.WebGLRenderer({
-    antialias : true,
-    alpha: true
-  });
-
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  
-  document.body.appendChild(renderer.domElement);
-
-  arToolkitContext = new THREEx.ArToolkitContext({
-    cameraParametersUrl: 'assets/camera_para.dat',
-    detectionMode: 'mono'
-  });
-
-  arToolkitContext.init(() => {
-    camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
-  });
-
-  arToolkitSource = new THREEx.ArToolkitSource({
-    sourceType : 'webcam',
-  });
-
-  function handleResize() {
-    arToolkitSource.onResize();
-    arToolkitSource.copySizeTo(renderer.domElement);
-
-    if (arToolkitContext.arController) {
-      arToolkitSource.copySizeTo(arToolkitContext.arController.canvas);
-    }
-  }
-
-  arToolkitSource.init(() => {
-    setTimeout(() => {
-      handleResize();
-      [].slice.call(document.querySelectorAll('.invisible')).forEach((elm) => {
-        elm.classList.remove('invisible');
-      });
-    }, 200);
-  });
-
-  window.addEventListener('resize', handleResize, {
-      passive: true
-    });
-}
-    </script>
 	  
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
-    <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
+    <a-scene embedded arjs='sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3; cameraParametersUrl: assets/camera_para.dat;' vr-mode-ui='enabled: false;' renderer='logarithmicDepthBuffer: true;'>
 	    
       <!-- 3DCGモデルを読み込む -->
       <a-assets>
@@ -93,5 +29,10 @@ function init() {
         <!-- 3Dモデルを呼び出す -->
         <a-entity gltf-model="#tiger" scale="0.5 0.5 0.5" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"></a-entity>
       </a-marker>
+      
+
+      <!-- カメラを追加 -->
+      <a-entity camera></a-entity>
+    </a-scene>
   </body>
 </html>
