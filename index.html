@@ -11,128 +11,123 @@
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.2/three.js/build/ar.js"></script>  
   <title>任意のページタイトル</title>
 </head>
+<script>
+  const clock = new THREE.Clock();
 
-<body style="margin: 0; overflow: hidden">
-  <script>
-    const clock = new THREE.Clock();
+  let scene, camera, renderer;
+  let arToolkitSource, arToolkitContext;
+  let mixer;
 
-    let scene, camera, renderer;
-    let arToolkitSource, arToolkitContext;
-    let mixer;
+  init();
 
-    init();
+  function init() {
+    scene = new THREE.Scene();
 
-    function init() {
-      scene = new THREE.Scene();
+    camera = new THREE.Camera();
+    scene.add(camera);
 
-      camera = new THREE.Camera();
-      scene.add(camera);
+    renderer = new THREE.WebGLRenderer({
+      antialias : true,
+      alpha: true
+    });
 
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true
-      });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    document.body.appendChild(renderer.domElement);
 
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
+    arToolkitContext = new THREEx.ArToolkitContext({
+      cameraParametersUrl: 'assets/camera_para.dat',
+      detectionMode: 'mono'
+    });
 
-      document.body.appendChild(renderer.domElement);
+    arToolkitContext.init(() => {
+      camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+    });
 
-      arToolkitContext = new THREEx.ArToolkitContext({
-        cameraParametersUrl: 'assets/camera_para.dat',
-        detectionMode: 'mono'
-      });
+    arToolkitSource = new THREEx.ArToolkitSource({
+      sourceType : 'webcam',
+    });
 
-      arToolkitContext.init(() => {
-        camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
-      });
+    function handleResize() {
+      arToolkitSource.onResize();
+      arToolkitSource.copySizeTo(renderer.domElement);
 
-      arToolkitSource = new THREEx.ArToolkitSource({
-        sourceType: 'webcam',
-      });
-
-      function handleResize() {
-        arToolkitSource.onResize();
-        arToolkitSource.copySizeTo(renderer.domElement);
-
-        if (arToolkitContext.arController) {
-          arToolkitSource.copySizeTo(arToolkitContext.arController.canvas);
-        }
+      if (arToolkitContext.arController) {
+        arToolkitSource.copySizeTo(arToolkitContext.arController.canvas);
       }
+    }
 
-      arToolkitSource.init(() => {
-        setTimeout(() => {
-          tick();
-          handleResize();
-          [].slice.call(document.querySelectorAll('.invisible')).forEach((elm) => {
-            elm.classList.remove('invisible');
-          });
-        }, 200);
-      });
+    arToolkitSource.init(() => {
+      setTimeout(() => {
+        tick();
+        handleResize();
+        [].slice.call(document.querySelectorAll('.invisible')).forEach((elm) => {
+          elm.classList.remove('invisible');
+        });
+      }, 200);
+    });
 
-      window.addEventListener('resize', handleResize, {
-        passive: true
-      });
+    window.addEventListener('resize', handleResize, {
+      passive: true
+    });
 
-      const markerRoot = new THREE.Group();
+    const markerRoot = new THREE.Group();
 
-      scene.add(markerRoot);
+    scene.add(markerRoot);
 
-      const arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-        type: 'pattern',
-        patternUrl: 'assets/marker.patt'
-      });
+    const arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+      type: 'pattern',
+      patternUrl: 'assets/marker.patt'
+    });
 
-      const loader = new THREE.GLTFLoader();
-      const url = 'assets/1111.glb';
+    const loader = new THREE.GLTFLoader();
+    const url = 'assets/1111.glb';
 
-      loader.load(
-        url,
-        (gltf) => {
-          const animations = gltf.animations;
-          const model = gltf.scene;
+    loader.load(
+      url,
+      (gltf) => {
+        const animations = gltf.animations;
+        const model = gltf.scene;
 
-          if (animations && animations.length) {
-            mixer = new THREE.AnimationMixer(model);
+        if (animations && animations.length) {
+          mixer = new THREE.AnimationMixer(model);
 
-            for (let i = 0; i < animations.length; i++) {
-              const animation = animations[i];
-              const action = mixer.clipAction(animation);
+          for (let i = 0; i < animations.length; i++) {
+            const animation = animations[i];
+            const action = mixer.clipAction(animation);
 
-              action.play();
-            }
+            action.play();
           }
-
-          model.scale.set(1, 1, 1);
-          model.position.set(0, 0, 0);
-          markerRoot.add(gltf.scene);
-        },
-        (err) => {
-          console.error(err);
         }
-      );
-    }
 
-    function update() {
-      if (arToolkitSource.ready) {
-        arToolkitContext.update(arToolkitSource.domElement);
+        model.scale.set(1, 1, 1);
+        model.position.set(0, 0, 0);
+        markerRoot.add(gltf.scene);
+      },
+      (err) => {
+        console.error(err);
       }
+    );
+  }
 
-      if (mixer) {
-        mixer.update(clock.getDelta());
-      }
+  function update() {
+    if (arToolkitSource.ready) {
+      arToolkitContext.update(arToolkitSource.domElement);
     }
 
-    function render() {
-      renderer.render(scene, camera);
+    if (mixer) {
+      mixer.update(clock.getDelta());
     }
+  }
 
-    function tick() {
-      update();
-      render();
-      requestAnimationFrame(tick);
-    }
-  </script>
-</body>
+  function render() {
+    renderer.render(scene, camera);
+  }
 
-</html>
+  function tick() {
+    update();
+    render();
+    requestAnimationFrame(tick);
+  }
+</script>
