@@ -26,6 +26,7 @@
       <a-asset-item id="sword2" src="assets/sickle.glb"></a-asset-item>
       <a-asset-item id="archery" src="assets/yumi.glb"></a-asset-item>
       <a-asset-item id="boots" src="assets/boots.glb"></a-asset-item>
+      <a-asset-item id="demon" src="assets/demon.glb"></a-asset-item>
     </a-assets>
 
     <a-marker type="pattern" url="assets/pattern-sickle.patt">
@@ -34,15 +35,20 @@
     </a-marker>
     
     <a-marker type="pattern" url="assets/pattern-sword1.patt">
-      <a-entity gltf-model="#sword1" position="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+      <a-entity gltf-model="#sword1" position="0 0 0" scale="1 1 1"></a-entity>
     </a-marker>
 
     <a-marker type="pattern" url="assets/pattern-archery.patt">
-      <a-entity gltf-model="#archery" position="0 0 0" scale="0.5 0.5 0.5" rotation="90 0 0"></a-entity>
+      <a-entity gltf-model="#archery" position="0 0 0" scale="0.5 0.5 0.5" rotation="0 0 90"></a-entity>
     </a-marker>
 
     <a-marker type="pattern" url="assets/pattern-boots.patt">
-      <a-entity gltf-model="#boots" position="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+      <a-entity gltf-model="#boots" position="0 0 0" scale="2 2 2"></a-entity>
+    </a-marker>
+
+    <a-marker type="pattern" url="assets/pattern-demon.patt">
+      <a-entity gltf-model="#demon" position="0 0 0" scale="1 1 1"
+      animation="property: rotation; to: 0 0 360; loop: true; dur: 10000"></a-entity>
     </a-marker>
 
     <!-- カメラを追加 -->
