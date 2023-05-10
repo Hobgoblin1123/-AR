@@ -28,6 +28,7 @@
       <a-asset-item id="boots" src="assets/boots.glb"></a-asset-item>
       <a-asset-item id="demon" src="assets/demon.glb"></a-asset-item>
       <a-asset-item id="hero" src="assets/hero.glb"></a-asset-item>
+      <a-asset-item id="maiden" src="assets/maiden.glb"></a-asset-item>
       <a-asset-item id="NAKAJIMAN" src="assets/NAKAJIMAN.glb"></a-asset-item>
       <a-asset-item id="ruins" src="assets/ruins.glb"></a-asset-item>
       <a-asset-item id="golem" src="assets/golem.glb"></a-asset-item>
@@ -56,6 +57,11 @@
     </a-marker>
 
     <a-marker type="pattern" url="assets/pattern-hero.patt">
+      <a-entity gltf-model="#hero" position="0 0 0" scale="1.3 1.3 1.3" rotation="0 -90 90"
+      animation="property: rotation; to: 360 -90 90; loop: true; dur: 10000"></a-entity>
+    </a-marker>
+
+    <a-marker type="pattern" url="assets/pattern-maiden.patt">
       <a-entity gltf-model="#hero" position="0 0 0" scale="1.3 1.3 1.3" rotation="0 -90 90"
       animation="property: rotation; to: 360 -90 90; loop: true; dur: 10000"></a-entity>
     </a-marker>
